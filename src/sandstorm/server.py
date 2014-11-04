@@ -37,7 +37,6 @@ def main(argv=sys.argv[1:]):
     conf.read([opts.ini])
     app_module = conf.get('application', 'module')
     route_prefix = conf.get('application', 'route_prefix')
-    print('{} {}'.format(app_module, route_prefix))
 
     configurator = Configurator()
     configurator.include(app_module, route_prefix=route_prefix)

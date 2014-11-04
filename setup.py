@@ -14,9 +14,11 @@ def find_package_data(target, package_root):
         for filename in files
         ]
 
+src = 'src'
 install_requires = []
 test_require = []
-package = find_packages('src')
+packages = find_packages(src)
+package_dir = {'': src}
 package_data = {}
 
 
@@ -43,7 +45,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         ],
     platforms='any',
-    package=package,
+    packages=packages,
+    package_dir=package_dir,
     package_data=package_data,
     include_package_data=True,
     install_requires=install_requires,

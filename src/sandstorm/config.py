@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 import configparser
 
 from pyramid.path import DottedNameResolver
@@ -25,8 +26,23 @@ class Configurator(object):
 
     def include(self, name, route_prefix=''):
         self.prefixes.append(route_prefix)
-        module = self.resolver.maybe_resolve(name)
-        print('{} -> {}'.format(name, module))
+        frame = inspect.currentframe()
+        prev_frame = frame.f_back
+        parent_name = prev_frame.f_globals['__name__']
+        modules = parent_name.split('.')
+        modules.append('.')
+        if name.startswith('.'):
+            while name.startswith('.'):
+                name = name[1:]
+                modules = modules[:-1]
+        else:
+            modules = []
+        modules.append(name)
+        abs_dotted_name = '.'.join(modules)
+        abs_dotted_name = (
+            abs_dotted_name[1:]
+            if abs_dotted_name.startswith('.') else abs_dotted_name)
+        module = self.resolver.maybe_resolve(abs_dotted_name)
         includeme = getattr(module, 'includeme')
         includeme(self)
         self.prefixes.pop()
