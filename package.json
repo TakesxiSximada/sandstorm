@@ -1,0 +1,24 @@
+{
+  "name": "sandstorm",
+  "version": "0.1.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.8.8",
+    "phantomjs": "^1.9.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TakesxiSximada/sandstorm"
+  },
+  "author": "TakesxiSximada <takesxi.sximada@gmail.com>",
+  "license": "See http://www.python.org/3.4/license.html",
+  "bugs": {
+    "url": "https://github.com/TakesxiSximada/sandstorm/issues"
+  },
+  "homepage": "https://github.com/TakesxiSximada/sandstorm"
+}
