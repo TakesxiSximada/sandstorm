@@ -15,45 +15,73 @@ from .config import Configurator
 from .handlers import YAStaticFileHandler
 
 
+DEFAULT_COOKIE_SECRET = '__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__'
+
+
 def setup(*args, **kwds):
     SessionSetup.setup_from_file(*args, **kwds)
 
 
+class SandstormServer(object):
+    def __init__(self, no_db=False):
+        self.config = Configurator()
+        self.no_db = no_db
+        self.port = 8000
+
+    def setup_from_file(self, confpath):
+        conf = configparser.SafeConfigParser()
+        conf.read([confpath])
+
+        kwds = {
+            'module': conf.get('application', 'module'),
+            'route_prefix': conf.get('application', 'route_prefix'),
+            'debug': bool(conf.get('application', 'debug')),
+            'port': int(conf.get('application', 'port')),
+            'cookie_secret': conf.get('application', 'cookie_secret'),
+            'frontend': conf.get('application', 'frontend'),
+            'db_section': (conf.get('application', 'db_section') or 'alembic'),
+            'db_alias': (conf.get('application', 'db_alias') or DEFAULT_TARGET),
+            }
+        self.setup(**kwds)
+
+    def setup(self, confpath=None, module=None, route_prefix='', debug=False,
+              cookie_secret=DEFAULT_COOKIE_SECRET, frontend=None, port=8000,
+              db_section='alembic', db_alias=DEFAULT_TARGET):
+        self.port = port if port else self.port
+        if not self.no_db and confpath:
+            SessionSetup.setup_from_file(confpath, db_section, db_alias)
+
+        if module:
+            self.config.include(module, route_prefix)
+
+        settings = {
+            'debug': debug,
+            'cookie_secret': cookie_secret,
+            }
+
+        urls = []
+        if frontend:
+            urls.append((u'/(.*)', YAStaticFileHandler, {'path': frontend}))
+
+        self.config.settings.update(settings)
+        self.config.urls.extend(urls)
+
+    def start(self):
+        print(self.config.urls)
+        app = Application(self.config.urls, **self.config.settings)
+        app.listen(self.port)
+        loop = IOLoop.instance()
+        loop.start()
+
+
 def main(argv=sys.argv[1:]):
     parser = argparse.ArgumentParser()
-    parser.add_argument('frontend')
-    parser.add_argument('--ini', default='alembic.ini')
-    parser.add_argument('--section', default='alembic')
-    parser.add_argument('--alias', default=DEFAULT_TARGET)
-    parser.add_argument('--no-db-setup', dest="no_db_setup",
-                         default=False, action='store_true')
-
+    parser.add_argument('--conf', default='alembic.ini')
     opts = parser.parse_args(argv)
 
-    if not opts.no_db_setup:
-        setup(opts.ini, opts.section, alias=opts.alias)
-
-    conf = configparser.SafeConfigParser()
-    conf.read([opts.ini])
-    app_module = conf.get('application', 'module')
-    route_prefix = conf.get('application', 'route_prefix')
-
-    configurator = Configurator()
-    configurator.include(app_module, route_prefix=route_prefix)
-    urls = configurator.urls
-    settings = configurator.settings
-    settings.update({
-        'debug': True,
-        'cookie_secret': "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
-        })
-    urls.extend([
-        (u'/(.*)', YAStaticFileHandler, {'path': opts.frontend}),
-        ])
-    print(urls)
-    app = Application(urls, **settings)
-    app.listen(8000)
-    loop = IOLoop.instance()
-    loop.start()
+    server = SandstormServer()
+    server.setup_from_file(opts.conf)
+    server.start()
 
 if __name__ == '__main__':
     main()
