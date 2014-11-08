@@ -15,6 +15,13 @@ def find_package_data(target, package_root):
         ]
 
 src = 'src'
+requires = [
+    'pyramid',
+    'tornado',
+    'transaction',
+    'azoth',
+    'jumon',
+    ]
 install_requires = []
 test_require = []
 packages = find_packages(src)
@@ -49,6 +56,7 @@ setup(
     package_dir=package_dir,
     package_data=package_data,
     include_package_data=True,
+    requires=requires,
     install_requires=install_requires,
     test_require=test_require,
     entry_points='''
