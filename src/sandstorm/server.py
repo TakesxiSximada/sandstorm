@@ -67,7 +67,8 @@ class SandstormServer(object):
         self.config.urls.extend(urls)
 
     def start(self):
-        print(self.config.urls)
+        for url, handler, kwds in self.config.urls:
+            print('{} : {} : {}'.format(url, handler, kwds))
         app = Application(self.config.urls, **self.config.settings)
         app.listen(self.port)
         loop = IOLoop.instance()
