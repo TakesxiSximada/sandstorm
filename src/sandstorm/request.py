@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-class ArugmentsNormalizer(object):
+class ArgumentsNormalizer(object):
     CAN_USE_TYPES = [
         'object',
         'number',
