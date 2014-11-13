@@ -2,31 +2,22 @@
 import os
 import copy
 import json
-import inspect
 import jsonschema
+from .utils import get_caller_module
 from .request import ArgumentsNormalizer
 
 
 def validate(schema, *args, **kwds):
-    frame = inspect.currentframe()
-    prev_frame = frame.f_back
-    parent_name = prev_frame.f_globals['__name__']
+    dotted, module, path, module_dir = get_caller_module()
+
     try:
-        module = __import__(
-            parent_name, globals={}, locals={}, fromlist=True)
-        module_path = module.__file__
-    except ImportError:
-        raise
+        schema = os.path.join(module_dir, schema)
+    except AttributeError:  # schema is not string
+        pass
     else:
-        module_dir = os.path.dirname(module_path)
-        try:
-            schema = os.path.join(module_dir, schema)
-        except AttributeError:  # schema is not string
-            pass
-        else:
-            if os.path.exists(schema):
-                with open(schema, 'r') as fp:
-                    schema = fp.read()
+        if os.path.exists(schema):
+            with open(schema, 'r') as fp:
+                schema = fp.read()
 
     try:
         schema = json.loads(schema)
