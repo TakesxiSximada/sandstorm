@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import inspect
 import configparser
 
 from pyramid.path import DottedNameResolver
@@ -8,7 +7,6 @@ from .utils import (
     get_caller_module,
     normalize_dotted_name,
     )
-
 
 
 class URLConfigurator(list):
@@ -71,6 +69,6 @@ class Configurator(object):
             self.load(package_names)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     conf = Configurator()
     conf.load_from_file('test.conf', 'testsection', 'testoption')
