@@ -4,7 +4,7 @@ import copy
 import json
 import jsonschema
 from .utils import get_caller_module
-from .request import ArgumentsNormalizer
+from .requests import ArgumentsNormalizer
 
 
 def validate(schema, *args, **kwds):

@@ -126,6 +126,30 @@ class ArgumentsNormalizerObjectTest(ArgumentsNormalizerTest):
                 }
             }
 
+    def _create_schema_no_property(self):
+        return {
+            'type': 'object',
+            'property-aaa': {  # typo
+                'string': {'type': 'string'},
+                'number': {'type': 'number'},
+                'integer': {'type': 'integer'},
+                'boolean': {'type': 'boolean'},
+                'null': {'type': 'null'},
+                'array': {'type': 'array'},
+                'object': {
+                    'type': 'object',
+                    'properties': {
+                        'string': {'type': 'string'},
+                        'number': {'type': 'number'},
+                        'integer': {'type': 'integer'},
+                        'boolean': {'type': 'boolean'},
+                        'null': {'type': 'null'},
+                        'array': {'type': 'array'},
+                        },
+                    },
+                },
+            }
+
     def test_coerce_object(self):
         arguments = self._create_arguments()
         normalized_arguments = self._create_normalized_arguments()
@@ -141,6 +165,13 @@ class ArgumentsNormalizerObjectTest(ArgumentsNormalizerTest):
         normalizer = self._create()
         val = normalizer.coerce_object(arguments, schema)
         self.assertEqual(normalized_arguments, val)
+
+    def test_coerce_object_no_property_schema(self):
+        arguments = self._create_arguments()
+        schema = self._create_schema_no_property()
+        normalizer = self._create()
+        val = normalizer.coerce_object(arguments, schema)
+        self.assertEqual(arguments, val)
 
 
 class ArgumentsNormalizerArrayTest(ArgumentsNormalizerTest):
