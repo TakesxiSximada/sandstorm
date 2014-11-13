@@ -72,31 +72,4 @@ class ArgumentsNormalizer(object):
                 hasattr(arguments, '__len__') else bool(arguments))
 
     def coerce_null(self, arguments, schema):
-        arguments = self._scalar(arguments)
-        return (arguments if
-                hasattr(arguments, '__len__') else arguments)
-
-import sys
-import json
-import argparse
-import jsonschema
-def main(argv=sys.argv[1:]):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('schema')
-    opts = parser.parse_args(argv)
-    with open(opts.schema) as fp:
-        schema = json.load(fp)
-    req ={
-        'second': [b'1'],
-        'first': [b'1'],
-        'third': [b'1'],
-        }
-
-    normalizer = ArugmentsNormalizer()
-    import ipdb; ipdb.set_trace()
-    res = normalizer.normalize(req, schema)
-    print(res)
-
-
-if __name__ == '__main__':
-    main()
+        return self._scalar(arguments)
