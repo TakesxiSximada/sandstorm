@@ -7,7 +7,7 @@ from .utils import get_caller_module
 from .requests import ArgumentsNormalizer
 
 
-def validate(schema, *args, **kwds):
+def validate(schema, ignore_error=False, *args, **kwds):
     dotted, module, path, module_dir = get_caller_module()
 
     try:
@@ -41,6 +41,13 @@ def validate(schema, *args, **kwds):
                     self.normalized_arguments, schema)
             except jsonschema.exceptions.ValidationError as err:
                 self.validation_error = err
-            return func(self)
+            if ignore_error or not self.validation_error:
+                return func(self)
+            else:
+                res = {
+                    'status': 'error',
+                    'reason': self.validation_error.message,
+                    }
+                raise ValueError(json.dumps(res))
         return _wrap
     return _deco
