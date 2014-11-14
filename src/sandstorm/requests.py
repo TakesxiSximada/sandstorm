@@ -44,7 +44,14 @@ class ArgumentsNormalizer(object):
         return arguments
 
     def coerce_string(self, arguments, schema):
+        _decode = lambda word: word.decode() if hasattr(word, 'decode') else word
         arguments = self._scalar(arguments)
+        arguments = _decode(arguments)
+        if not hasattr(arguments, 'encode'):  # list ?
+            try:
+                arguments = list(map(_decode, arguments))
+            except Exception:  # cannot coerce -> ignore
+                pass
         return arguments
 
     def coerce_number(self, arguments, schema):

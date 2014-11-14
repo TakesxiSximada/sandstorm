@@ -231,7 +231,7 @@ class ArgumentsNormalizerStringTest(ArgumentsNormalizerTest):
         schema = {}
         normalizer = self._create()
         val = normalizer.coerce_string(arguments, schema)
-        self.assertEqual(value, val)
+        self.assertEqual(value.decode(), val)
 
     def test_coerce_string_single_element_list(self):
         value = 'string object'
