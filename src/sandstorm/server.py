@@ -33,6 +33,7 @@ class SandstormServer(object):
         conf.read([confpath])
 
         kwds = {
+            'confpath': confpath,
             'module': conf.get('application', 'module'),
             'route_prefix': conf.get('application', 'route_prefix'),
             'debug': bool(conf.get('application', 'debug')),
@@ -50,7 +51,6 @@ class SandstormServer(object):
         self.port = port if port else self.port
         if not self.no_db and confpath:
             SessionSetup.setup_from_file(confpath, db_section, db_alias)
-
         if module:
             self.config.include(module, route_prefix)
 
