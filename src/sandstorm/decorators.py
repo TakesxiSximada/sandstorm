@@ -3,8 +3,21 @@ import os
 import copy
 import json
 import jsonschema
+from pyramid.httpexceptions import HTTPException
+
 from .utils import get_caller_module
 from .requests import ArgumentsNormalizer
+
+
+def view_config():
+    def _deco(func):
+        def _wrap(self):
+            try:
+                func(self)
+            except HTTPException as err:
+                self.set_status(err.code, str(err))
+        return _wrap
+    return _deco
 
 
 def validate(schema, ignore_error=False, *args, **kwds):
