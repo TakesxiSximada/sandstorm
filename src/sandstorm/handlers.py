@@ -38,4 +38,4 @@ class YAStaticFileHandler(StaticFileHandler):
             abspath = os.path.join(self.root, target)
             if os.path.isfile(abspath):
                 return target
-        return None
+        return os.path.join(self.root, path)
