@@ -44,6 +44,8 @@ class Configurator(object):
         prefix += '' if prefix.endswith('/') else '/'
         url = url[1:] if url.startswith('/') else url
         real_url = prefix + url
+        real_url = real_url[:-1] if real_url.endswith('/') else real_url
+        real_url += '/?'
         self.urls.append(
             (real_url, handler, params)
             )
