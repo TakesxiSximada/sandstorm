@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
+class ArgumentsCleaner(object):
+    def clean(self, arguments):
+        if hasattr(arguments, 'items'):  # dict like?
+            return dict((key.strip('[]'), self.clean(value)) for key, value in arguments.items())
+        elif hasattr(arguments, 'pop'):  # iterator?
+            return [self.clean(arg) for arg in arguments]
+        else:
+            return arguments
+
+
 class ArgumentsNormalizer(object):
     CAN_USE_TYPES = [
         'object',

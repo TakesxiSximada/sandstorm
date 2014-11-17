@@ -2,6 +2,59 @@
 from unittest import TestCase
 
 
+class ArgumentsCleanerTest(TestCase):
+    def _create(self):
+        from ..requests import ArgumentsCleaner
+        return ArgumentsCleaner()
+
+    def _create_arguments(self):
+        return {
+            'string': 'string object',
+            'number': 1,
+            'integer': [3],
+            'boolean': [False],
+            'null': None,
+            'array': [1, 2, 3, 4],
+            'array2[]': [1, 2, 3, 4],
+            'object': {
+                'string': 'string object',
+                'number': 1,
+                'integer': [3],
+                'boolean': [False],
+                'null': None,
+                'array': [1, 2, 3, 4],
+                'array2[]': [1, 2, 3, 4],
+                }
+            }
+
+    def _create_cleaned_arguments(self):
+        return {
+            'string': 'string object',
+            'number': 1,
+            'integer': [3],
+            'boolean': [False],
+            'null': None,
+            'array': [1, 2, 3, 4],
+            'array2': [1, 2, 3, 4],
+            'object': {
+                'string': 'string object',
+                'number': 1,
+                'integer': [3],
+                'boolean': [False],
+                'null': None,
+                'array': [1, 2, 3, 4],
+                'array2': [1, 2, 3, 4],
+                }
+            }
+
+    def test_clean(self):
+        cleaner = self._create()
+        arguments = self._create_arguments()
+        val = cleaner.clean(arguments)
+        cleaned_arguments = self._create_cleaned_arguments()
+        self.assertEqual(val, cleaned_arguments)
+
+
 class ArgumentsNormalizerTest(TestCase):
     def _create(self):
         from ..requests import ArgumentsNormalizer

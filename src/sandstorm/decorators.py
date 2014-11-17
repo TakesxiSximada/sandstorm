@@ -6,7 +6,10 @@ import jsonschema
 from pyramid.httpexceptions import HTTPException
 
 from .utils import get_caller_module
-from .requests import ArgumentsNormalizer
+from .requests import (
+    ArgumentsNormalizer,
+    ArgumentsCleaner,
+    )
 
 
 def view_config():
@@ -45,7 +48,9 @@ def validate(schema, ignore_error=False, *args, **kwds):
             setattr(self, 'normalized_arguments', {})
 
             arguments = copy.deepcopy(self.request.arguments)
+            cleaner = ArgumentsCleaner()
             normalizer = ArgumentsNormalizer()
+            arguments = cleaner.clean(arguments)
             arguments = normalizer.normalize(arguments, schema)
             self.normalized_arguments = arguments
 
