@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import transaction
 from tornado.web import (
     StaticFileHandler,
     RequestHandler,
@@ -21,9 +20,6 @@ class SandstormHandler(RequestHandler):
             params[key] = values[0] \
               if count == 1 else values[:count]
         return params
-
-    def on_finish(self):
-        transaction.commit()
 
 
 class YAStaticFileHandler(StaticFileHandler):
