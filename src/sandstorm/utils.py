@@ -3,9 +3,11 @@ import os
 import inspect
 
 
-def get_caller_module():
+def get_caller_module(depth=0):
     dotted = module = path = dirpath = None
     frame = inspect.currentframe().f_back.f_back
+    for ii in range(depth):
+        frame = frame.f_back
     dotted = frame.f_globals['__name__']
     fromlist = []
     if dotted.count('.') > 0:  # sub module or sub package
