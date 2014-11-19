@@ -26,6 +26,7 @@ class Middleware(object):
         middleware = middlewares[0] if len(middlewares) > 0 else None
         self._response = (middleware.run(func, handler, middlewares[1:])
                           if middleware else func(handler))
+        return self._response
 
     def setup(self, handler):
         pass
@@ -59,8 +60,8 @@ class ViewConfig(object):
             for keyword in middleware_class.keywords:
                 if keyword in self.keywords:
                     raise DuplicateKeywordError(keyword)
-                self.middleware_classes.append(middleware_class)
                 self.keywords.append(keyword)
+            self.middleware_classes.append(middleware_class)
 
     def create_middlewares(self, **kwds):
         return [klass(**kwds) for klass in self.middleware_classes]
