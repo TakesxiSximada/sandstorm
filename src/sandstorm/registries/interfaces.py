@@ -21,26 +21,25 @@ class IRegistryManager(Interface):
         """implがinterfaceを提供しているかどうかを確認する
         提供していればTrue、していなければFalseを返す。
         """
-        return True or False
+        return True or False  # pragma: nocover
 
     def names():
         """管理しているレジストリに登録されている名前の一覧のリストを返す
         """
-        return list()
+        return list()  # pragma: nocover
 
     def register(name, impl, update=False):
         """管理しているレジストリに実装を登録する
         """
-        pass
 
     def lookup(name):
         """nameから登録されている実装を取得する
         無い場合はNoneを返す
         """
-        return object or None
+        return object or None  # pragma: nocover
 
     def create(name, *args, **kwds):
         """nameから登録されている実装を用いてそれをインスタンス化する
         無い場合はNoneを返す
         """
-        return object() or None
+        return object() or None  # pragma: nocover

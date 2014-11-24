@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 import zope.interface
 import zope.interface.verify
-import zope.interface.exceptions
-
+from zope.interface.exceptions import (
+    DoesNotImplement,
+    BrokenImplementation,
+    )
 from .core import CommonRegistryFactory
 from .dummy import IDummyInterface
 from .interfaces import IRegistryManager
-from .errors import AlreadyRegisterdNameError
+from .errors import (
+    InterfaceMismatchError,
+    AlreadyRegisterdNameError,
+    )
 
 
 @zope.interface.implementer(IRegistryManager)
 class BaseRegistryManager(object):
     required = []
-    provided = IDummyInterface
+    provided = IRegistryManager
     registry_factory = CommonRegistryFactory
 
     def __init__(self, required=None, provided=None, registry=None):
@@ -24,12 +29,15 @@ class BaseRegistryManager(object):
         """
         raise zope.interface.exceptions.BrokenImplementation
         """
-        return zope.interface.verify.verifyClass(self._provided, impl)
+        try:
+            return zope.interface.verify.verifyClass(self._provided, impl)
+        except (BrokenImplementation, DoesNotImplement) as err:
+            raise InterfaceMismatchError(err)
 
     def implemented_by(self, impl):
         try:
             return self.verify(impl)
-        except zope.interface.exceptions.BrokenImplementation:
+        except InterfaceMismatchError:
             return None
 
     def names(self):
@@ -49,3 +57,10 @@ class BaseRegistryManager(object):
     def create(self, name, *args, **kwds):
         klass = self.lookup(name)
         return klass(*args, **kwds) if klass else None
+
+
+@zope.interface.implementer(IRegistryManager)
+class DummyRegistryManager(object):
+    required = []
+    provided = IDummyInterface
+    registry_factory = CommonRegistryFactory

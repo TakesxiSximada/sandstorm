@@ -5,4 +5,4 @@ from .dummy import DummyImpl
 
 def includeme(config):
     manager = BaseRegistryManager()
-    manager.register('', DummyImpl)
+    manager.register('', BaseRegistryManager)
