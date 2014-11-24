@@ -43,6 +43,15 @@ class Middleware(object):
         pass
 
 
+class TeadownOptionalMiddleware(Middleware):
+
+    def run(self, func, handler, middlewares):
+        self.setup(handler)
+        self.process(func, handler, middlewares)
+        self.teardown(handler)
+        return self._response
+
+
 class DummyMiddleware(Middleware):
     pass
 
