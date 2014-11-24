@@ -25,6 +25,12 @@ class BaseRegistryManager(object):
         self._provided = provided or self.provided
         self._registry = registry or self.registry_factory()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exec_type, exec_val, exec_tb):
+        pass
+
     def verify(self, impl):
         """
         raise zope.interface.exceptions.BrokenImplementation
