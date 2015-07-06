@@ -2,6 +2,9 @@ sandstorm
 
 The sandstorm is Web Application Framework on Tornado, but can use Pyramid like.
 
+.. image:: https://circleci.com/gh/TakesxiSximada/sandstorm.svg?style=svg
+               :target: https://circleci.com/gh/TakesxiSximada/sandstorm
+
 Install
 ===========
 
