@@ -31,7 +31,7 @@ package_data = {}
 
 setup(
     name='sandstorm',
-    version='0.1.3',
+    version='0.1.4',
     url='https://github.com/TakesxiSximada/sandstorm',
     download_url='https://github.com/TakesxiSximada/sandstorm',
     license='See http://www.python.org/3.4/license.html',
