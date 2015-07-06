@@ -6,24 +6,24 @@ from setuptools import (
     find_packages,
     )
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-def find_package_data(target, package_root):
-    return [
-        os.path.relpath(os.path.join(root, filename), package_root)
-        for root, dirs, files in os.walk(target)
-        for filename in files
-        ]
+
+def here(path):
+    return os.path.join(base_dir, path)
+
+
+def load_requirements(path):
+    with open(path, 'rt') as fp:
+        for line in fp:
+            line = line.strip()
+            if line:
+                yield line
 
 src = 'src'
-requires = [
-    'pyramid',
-    'tornado',
-    'transaction',
-    'azoth',
-    'jumon',
-    ]
-install_requires = []
-test_require = []
+install_requires = list(load_requirements('requirements/install.txt'))
+test_require = list(load_requirements('requirements/test.txt'))
+requires = install_requires + test_require
 packages = find_packages(src)
 package_dir = {'': src}
 package_data = {}
