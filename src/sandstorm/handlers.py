@@ -17,8 +17,7 @@ class SandstormHandler(RequestHandler):
             values = self.request.arguments[key]
             values = map(lambda x: x.decode(), values)
             values = list(map(type_, values))
-            params[key] = values[0] \
-              if count == 1 else values[:count]
+            params[key] = values[0] if count == 1 else values[:count]
         return params
 
 
